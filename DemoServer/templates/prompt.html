@@ -5,7 +5,8 @@
 		<title>Allow access? - OAuthServer</title>
 	</head>
 	<body>
-		Hi {{ name }}, application {{ authData.cid }} is requesting {{ authData.scope }} level access to your account. <br />
+		<h1>Server</h1>
+		Hi <strong>{{ name }}</strong>, application {{ authData.cid }} is requesting {{ authData.scope }} level access to your account. <br />
 		If you grant access, {{ authData.cid }} will be able to access your secret data. <br />
 		<form action="/oauth/authorize" method = "POST">
 			<input type = "radio" name = "accept" value = "true" />Grant

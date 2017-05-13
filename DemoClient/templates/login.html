@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+	<title>Hi - DemoClient</title>
+	{% with msgs = get_flashed_messages() %}
+		<script>
+		{% if msgs %}
+			{# fix &#39 showing up #}
+			{% for msg in msgs %}
+				alert("{{ msg }}")
+			{% endfor %}
+		{% endif %}
+		</script>
+	{% endwith %}
+	</head>
+	<body>
+		<h1>Client</h1>
+		<a href="http://127.0.0.1:5000/oauth/authorize?cid=OAuthDemoClient&redirUrl=http://127.0.0.2:5000/callback&scope=read">Login using DemoServer</a>
+	</body>
+</html>
