@@ -217,7 +217,6 @@ def returnUserData():
             "secret": secret,
         })
 
-
 @app.route("/logout")
 def logout():
     keys = []
