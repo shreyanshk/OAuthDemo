@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session, redirect, url_for, request, abort, flash
 from dbModels import User, OAuthToken, dbctx
+from datetime import datetime
 import json
 import random
 import string
@@ -219,13 +220,19 @@ def returnUserData():
             "response": "not authorized",
         })
     else:
-        name = record.name
-        secret = User.query.filter_by(name = name).first().secret
-        return json.dumps({
-            "response": "success",
-            "name": name,
-            "secret": secret,
-        })
+        exp = record.exp
+        if (exp > datetime.now()):
+            name = record.name
+            secret = User.query.filter_by(name = name).first().secret
+            return json.dumps({
+                "response": "success",
+                "name": name,
+                "secret": secret,
+            })
+        else:
+            return json.dumps({
+                "response": "token expired",
+            })
 
 @app.route("/logout")
 def logout():
