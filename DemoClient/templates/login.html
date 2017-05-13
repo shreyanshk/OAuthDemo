@@ -13,7 +13,7 @@
 		{% endif %}
 	{% endwith %}
 	function login() {
-		window.open("http://127.0.0.1:5000/oauth/authorize?cid=OAuthDemoClient&redirUrl=http://127.0.0.2:5000/callback&scope=read");
+		window.open("http://127.0.0.1:5000/oauth/authorize?resType=code&cid=OAuthDemoClient&redirUrl=http://127.0.0.2:5000/callback&scope=read");
 		document.getElementById("content").innerHTML = "Refresh this page once you've logged in.";
 	}
 	</script>

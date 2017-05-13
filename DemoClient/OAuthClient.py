@@ -19,24 +19,35 @@ def status():
 def callback():
     status = request.args["request_status"]
     if (status == "granted"):
-        r = request.args["authKey"]
-        asktoken = httpRequests.get(
-            "http://127.0.0.1:5000/oauth/token?authKey="
-            + r
-            + "&clientsecret=secretkeyclient"
-        ).text
-        asktoken = json.loads(asktoken)
-        if (asktoken["response"] == "success"):
+        if (request.args["type"] == "code"):
+            r = request.args["authKey"]
+            asktoken = httpRequests.get(
+                "http://127.0.0.1:5000/oauth/token?authKey="
+                + r
+                + "&clientsecret=secretkeyclient"
+                + "&cid=OAuthDemoClient"
+                + "&grant_type=authorization_code"
+            ).text
+            asktoken = json.loads(asktoken)
+            if (asktoken["response"] == "success"):
+                userData = httpRequests.get(
+                    "http://127.0.0.1:5000/api/userdata?token="
+                    + asktoken["token"]
+                ).text
+                userData = json.loads(userData)
+                session["name"] = userData["name"]
+                session["secret"] = userData["secret"]
+        elif (request.args["type"] == "token"):
             userData = httpRequests.get(
                 "http://127.0.0.1:5000/api/userdata?token="
-                + asktoken["token"]
+                + request.args["token"]
             ).text
             userData = json.loads(userData)
             session["name"] = userData["name"]
             session["secret"] = userData["secret"]
         return render_template("closingwindow.html")
     else:
-        flash("Login was denied")
+        flash("Login was denied.")
         return redirect(url_for("status"))
 
 @app.route("/logout")
