@@ -3,19 +3,25 @@
 	<head>
 	<meta charset="UTF-8">
 	<title>Hi - DemoClient</title>
+	<script>
 	{% with msgs = get_flashed_messages() %}
-		<script>
 		{% if msgs %}
 			{# fix &#39 showing up #}
 			{% for msg in msgs %}
-				alert("{{ msg }}")
+				alert("{{ msg }}");
 			{% endfor %}
 		{% endif %}
-		</script>
 	{% endwith %}
+	function login() {
+		window.open("http://127.0.0.1:5000/oauth/authorize?cid=OAuthDemoClient&redirUrl=http://127.0.0.2:5000/callback&scope=read");
+		document.getElementById("content").innerHTML = "Refresh this page once you've logged in.";
+	}
+	</script>
 	</head>
 	<body>
 		<h1>Client</h1>
-		<a href="http://127.0.0.1:5000/oauth/authorize?cid=OAuthDemoClient&redirUrl=http://127.0.0.2:5000/callback&scope=read">Login using DemoServer</a>
+		<div id="content">
+			<button onClick = "login()">Click here to login using DemoServer</button>
+		</div>
 	</body>
 </html>

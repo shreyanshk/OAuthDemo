@@ -6,6 +6,7 @@
 	</head>
 	<body>
 		<h1>Server</h1>
+		<h2>Prompt</h2>
 		Hi <strong>{{ name }}</strong>, application {{ authData.cid }} is requesting {{ authData.scope }} level access to your account. <br />
 		If you grant access, {{ authData.cid }} will be able to access your secret data. <br />
 		<form action="/oauth/authorize" method = "POST">

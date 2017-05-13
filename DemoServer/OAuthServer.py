@@ -240,6 +240,6 @@ def register():
         user = User(name, passwd, secret)
         dbctx.session.add(user)
         dbctx.session.commit()
-        return "User " + name + " created."
+        return "User " + name + " created. You can now close this window."
 
 app.run(host = "127.0.0.1", port = 5000, debug = True)

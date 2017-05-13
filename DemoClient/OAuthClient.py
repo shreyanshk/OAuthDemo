@@ -34,10 +34,11 @@ def callback():
             userData = json.loads(userData)
             session["name"] = userData["name"]
             session["secret"] = userData["secret"]
-        return redirect(url_for("status"))
+        return render_template("closingwindow.html")
     else:
         flash("Login was denied")
         return redirect(url_for("status"))
+
 @app.route("/logout")
 def logout():
     keys = []

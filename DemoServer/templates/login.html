@@ -13,14 +13,22 @@
 		{% endif %}
 		</script>
 	{% endwith %}
+	<script>
+	function register() {
+		window.open("/register");
+	}
+	</script>
 	</head>
 	<body>
 		<h1>Server</h1>
+		<h2>Login</h2>
 		<form action = "/login" method="POST">
 			Name: <input name = "name" type = "text" /><br />
 			Password: <input name = "passwd" type = "password" /><br />
 			<input type = "hidden" name = "callback" value = "{{ callback }}" />
 			<input type = "submit" value = "Login" />
 		</form>
+		<br />
+		<button onClick = "register()">Click here to register</button>
 	</body>
 </html>
