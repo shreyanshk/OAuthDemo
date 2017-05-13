@@ -18,6 +18,7 @@
 		<form action = "/login" method="POST">
 			Name: <input name = "name" type = "text" /><br />
 			Password: <input name = "passwd" type = "password" /><br />
+			<input type = "hidden" name = "callback" value = "{{ callback }}" />
 			<input type = "submit" value = "Login" />
 		</form>
 	</body>

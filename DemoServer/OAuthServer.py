@@ -61,18 +61,21 @@ def askUserAuth():
                 "redirUrl": r["redirUrl"],
                 "scope": r["scope"],
             }
+            #for now only two scopes are assumed
+            if (authData["scope"] != "read") and (authData["scope"] != "readwrite"):
+                abort(400)
+            session["authData"] = authData
         except KeyError:
-            abort(400)
-        #for now only two scopes are assumed
-        if (authData["scope"] != "read") and (authData["scope"] != "readwrite"):
-            abort(400)
-        session["authData"] = authData
+            if "authData" in session:
+                authData = session["authData"]
+            else:
+                abort(400)
         #hardcoded cid for checking
-        if ("name" not in session) and (r["cid"] == "OAuthDemoClient"):
-            return redirect(url_for("login"))
-        elif ("name" in session) and (r["cid"] == "OAuthDemoClient"):
+        if ("name" not in session) and (authData["cid"] == "OAuthDemoClient"):
+            return redirect(url_for("login") + "?callback=/oauth/authorize")
+        elif ("name" in session) and (authData["cid"] == "OAuthDemoClient"):
             #generate random key to protect from CSRF
-            authData["authKey"] = "".join(
+            session["authData"]["authKey"] = "".join(
                 random.choices(
                     string.ascii_uppercase + string.digits,
                     k=64,
@@ -86,13 +89,13 @@ def askUserAuth():
             abort(401)
     elif request.method == "POST":
         r = request.form
-        if (r["accept"] == "true") and (r[csrfprotect] == session["authData"]["authKey"]):
+        if (r["accept"] == "true") and (r["csrfprotect"] == session["authData"]["authKey"]):
             callback = session["authData"]["redirUrl"]
-            callback = callback + "?request_status=true&token=" + session["authData"]["authKey"]
+            callback = callback + "?request_status=granted&token=" + r["csrfprotect"]
             return redirect(callback)
         elif r['accept'] == "false":
             callback = session["authData"]["redirUrl"]
-            callback = callback + "?request_status=false"
+            callback = callback + "?request_status=denied"
             session["authData"] = {}
             return redirect(callback)
         elif (r[csrfprotect] != session["authData"]["authKey"]):
@@ -105,19 +108,25 @@ def returnToken():
 @app.route("/login", methods = ["GET", "POST"])
 def login():
     if request.method == "GET":
+        try:
+            callback = request.args["callback"]
+        except KeyError:
+            callback = url_for("status")
         if "name" in session:
-            return redirect(url_for("status"))
-        return render_template("login.html")
+            return redirect(callback)
+        elif "name" not in session:
+            return render_template("login.html", callback = callback)
     elif request.method == "POST":
         r = request.form
         name, passwd = (r["name"], r["passwd"])
+        callback = r["callback"]
         validUser = verifyUser(name, passwd)
         if validUser:
             session["name"] = name
-            return redirect(url_for("status"))
+            return redirect(callback)
         else:
             flash("Incorrect password.")
-            return redirect(url_for("login"))
+            return render_template("login.html", callback = callback)
 
 def verifyUser(name, passwd):
         user = User.query.filter_by(name = name).first()
