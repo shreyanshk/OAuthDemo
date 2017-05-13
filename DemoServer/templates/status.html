@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Status - OAuthServer</title>
+	</head>
+	<body>
+		{% if name %}
+		Hi, you're logged in as {{ name }}.<br />
+		Your secret is:<br /> {{ secret }}<br />
+		<a href="/logout">Click here to logout</a>
+		{% else %}
+		<a href="/login">Click here to login</a>
+		<br />
+		<a href="/register">Click here to register</a>
+		{% endif %}
+	</body>
+</html>
