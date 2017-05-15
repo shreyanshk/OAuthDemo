@@ -159,10 +159,11 @@ def returnToken():
                 dbctx.session.add(newOAuthToken)
                 dbctx.session.commit()
                 newToken = newOAuthToken.token
+                newrToken = newOAuthToken.rToken
                 return json.dumps({
                     "response": "success",
                     "token": newToken,
-                    "rToken": rToken,
+                    "rToken": newrToken,
                 })
 
 @app.route("/login", methods = ["GET", "POST"])
